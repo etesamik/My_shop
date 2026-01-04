@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('attribut_category',
             function (Blueprint $table) {
                 //rabet
-                $table->id();
+
                 $table->foreignId('attribute_id');
                 $table->foreign('attribute_id')->references('id')->on('attributes')->onDelete('cascade');
                 $table->foreignId('category_id');

@@ -16,10 +16,11 @@ return new class extends Migration
             $table->string('name');
             $table->string('code');
             $table->enum('type', ['amount', 'percentage'])->default('percentage');
+
             $table->unsignedBigInteger('amount');
             $table->unsignedBigInteger('percentage');
             $table->unsignedBigInteger('max_percentage_amount');
-            $table->timestamps('expires_at');
+            $table->timestamp('expires_at');
             $table->text('description');
             $table->timestamps();
         });
