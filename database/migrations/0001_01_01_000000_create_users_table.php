@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('phone_number');
+            $table->string('phone_number')->nullable()->change();
             //$table->string('profile_img')->nullable();
             $table->integer('status')->default(0);
-            $table->string('creates_by');
-            $table->string('updates_by');
+            $table->string('creates_by')->nullable()->change();
+            $table->string('updates_by')->nullable()->change();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken(); //متد helper لاراول که معادل string('remember_token', 100)->nullable() هست.

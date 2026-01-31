@@ -299,7 +299,7 @@
                             <div class="d-flex align-items-center justify-content-between top-header-call">
                                 <div class="auth-link">
 
-                                    {% if user.is_authenticated %}
+                                    @if(Auth::check())
 
                                     <div class="dropdown text-end">
                                         <a href="" data-bs-toggle="dropdown" aria-expanded="false" role="button"
@@ -337,18 +337,18 @@
                                             <li class="w-100"><a href="" class="dropdown-item fs-6 py-2"><i
                                                     class="bi bi-gift me-2"></i>کد های تخفیف
                                                 من</a></li> -->
-                                            <li class="w-100"><a href="}" class="dropdown-item fs-6 py-2 mct-hover"><i
+                                            <li class="w-100"><a href="{{route('logout')}}" class="dropdown-item fs-6 py-2 mct-hover"><i
                                                         class="bi bi-arrow-right-square me-2"></i>خروج از حساب کاربری</a>
                                             </li>
                                         </ul>
                                     </div>
-{{--                                    {% else %}--}}
-                                    <a href="" class="auth-btn">
+                                    @else
+                                    <a href="{{route('show.login')}}" class="auth-btn">
                                         <i class="bi bi-person"></i>
                                         <span class="fw-bold d-sm-inline-block d-none">ورود / عضویت</span>
                                     </a>
 
-                                    {% endif %}
+                                    @endif
 
                                 </div>
                                 <div class="cart-button ms-3">
@@ -485,7 +485,9 @@
                 <div class="col-lg-3 col-xl-4">
                     <div class="d-flex align-items-center justify-content-end">
                         <div class="d-flex align-items-center justify-content-between top-header-call d-xl-flex d-none">
-                            {% if user.is_authenticated %}
+
+
+                            @if(Auth::check())
                             <div class="dropdown text-end">
                                 <a href="" data-bs-toggle="dropdown" aria-expanded="false" role="button"
                                    class="btn btn-white auth-dropdown header-register border-0">
@@ -522,24 +524,27 @@
                                     <!-- <li class="w-100"><a href="" class="dropdown-item fs-6 py-2"><i
                                             class="bi bi-gift me-2"></i>کد های تخفیف
                                         من</a></li> -->
-                                    <li class="w-100"><a href="" class="dropdown-item fs-6 py-2 mct-hover"><i
+                                    <li class="w-100"><a href="{{route('logout')}}" class="dropdown-item fs-6 py-2 mct-hover"><i
                                                 class="bi bi-arrow-right-square me-2"></i>خروج از حساب کاربری</a></li>
                                 </ul>
                             </div>
-                            {% else %}
+                            @else
                             <div class="auth-link">
-                                <a href="">
+                                <a href="{{route('show.login')}}">
                                     <i class="bi bi-person"></i>
                                     <span class="fw-bold">ورود / عضویت</span>
                                 </a>
                             </div>
-                            {% endif %}
+                            @endif
 
                             <div class="cart-button ms-3">
                                 <a class="d-flex align-items-center h-100" data-bs-toggle="offcanvas"
                                    href="#offcanvasCart" role="button" aria-controls="offcanvasCart">
                                     <i class="bi bi-cart w-40-px h-40-px lh-40-px main-color-one-bg no-hover d-inline-block rounded-start text-center"></i>
                                     <span class="d-block main-color-two-bg h-40-px lh-40-px px-2 no-hover rounded-end">
+                                        {{ number_format(array_sum(array_map(function($item) {
+                        return $item['price'] * $item['quantity'];
+                    }, $cart_items))) }} تومان
                                     </span>
                                 </a>
                             </div>
@@ -711,26 +716,29 @@
     </div>
     <div class="offcanvas-body">
         <ul class="navbar-nav cart-canvas-parent">
-{{--            {% for item in cart_items %}--}}
+            @if(count($cart_items))
+                @foreach($cart_items as $id => $item)
             <li class="nav-item">
                 <div class="cart-canvas">
                     <div class="row align-items-center">
                         <div class="col-4 ps-0">
-                            <img src="" alt="}">
+                            <img src="{{ isset($item['image']) ? asset( $item['image']) : asset('images/default.png') }}" alt="{{ $item['name'] }}">
+
                         </div>
                         <div class="col-8">
-                            <h3 class="text-overflow-3 font-16"></h3>
+                            <h3 class="text-overflow-3 font-16">{{ $item['name'] }}</h3>
                             <div class="product-box-suggest-price my-2 d-flex align-items-center justify-content-between">
-                                <ins class="font-25 w-100 text-end"><span></span></ins>
+                                <ins class="font-25 w-100 text-end">
+                                    <span>{{ number_format($item['price']) }} تومان</span></ins>
                             </div>
                             <div class="cart-canvas-foot d-flex align-items-center justify-content-between">
                                 <div class="cart-canvas-count">
                                     <span>تعداد:</span>
-                                    <span class="fw-bold"></span>
+                                    <span class="fw-bold">{{ $item['quantity'] }}</span>
                                 </div>
                                 <div class="cart-canvas-delete">
-                                    <form action="" method="POST" style="display:inline;">
-                                        {% csrf_token %}
+                                    <form action="{{ route('cart.remove', $id) }}" method="POST" style="display:inline;">
+                                        @csrf
                                         <button type="submit" class="btn btn-danger" title="Remove from cart">
                                             <i class="bi bi-x"></i>
                                         </button>
@@ -742,13 +750,15 @@
                     </div>
                 </div>
             </li>
-            {% empty %}
+                @endforeach
+            @else
+
             <li class="nav-item">
                 <div class="cart-canvas text-center">
                     <p class="font-16 text-muted">سبد خرید شما خالی است</p>
                 </div>
             </li>
-            {% endfor %}
+            @endif
         </ul>
 
 
@@ -757,12 +767,14 @@
                 <div class="col-6">
                     <div class="cart-canvas-foot-sum">
                         <p class="text-muted mb-2">جمع کل</p>
-                        <h5></h5>
+                        <h5>{{ number_format(array_sum(array_map(function($item) {
+                        return $item['price'] * $item['quantity'];
+                    }, $cart_items))) }} تومان</h5>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="cart-canvas-foot-link text-end">
-                        <a href="" class="btn border-0 main-color-green "><i
+                        <a href="{{ route('success') }}" class="btn border-0 main-color-green "><i
                                 class="bi bi-arrow-left me-1"></i> تکمیل خرید</a>
                     </div>
                 </div>
