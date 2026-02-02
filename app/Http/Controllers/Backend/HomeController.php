@@ -19,12 +19,13 @@ class HomeController extends Controller
 
         //week information
 
-        $start_of_week = $now->copy()->startOfWeek();
-        $end_of_week  = $start_of_week->copy()->addDays(7);
+        $start_of_week = Carbon::now()->startOfWeek()->startOfDay();
+        $end_of_week = Carbon::now()->endOfWeek()->endOfDay();
 
-        // 10 product in week
-        $new_products = Product::whereBetween('created_at', [$start_of_week, $end_of_week])->latest()->take(10)->get();
-
+        $new_products = Product::whereBetween('created_at', [$start_of_week, $end_of_week])
+            ->latest()
+            ->take(10)
+            ->get();
 
         // اینحا $q یه کوئریه و بعدا تعریف شده که این کوئری میگه که ۴ تا محصول بگیر
         $categories = Category::with(['products' => function($q) {$q->take(4);

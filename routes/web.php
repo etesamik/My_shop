@@ -28,7 +28,7 @@ Route::post('/cart/empty', [CartController::class, 'emptyCart'])->name('cart.emp
 // products ------------------
 Route::get('/product/{slug}', [ProductController::class, 'detail'])->name('products.detail');
 
-
+//
 
 // payment -------------------این فعلا ازمایشیه
 Route::get('/success', function (){

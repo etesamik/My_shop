@@ -774,7 +774,7 @@
                 </div>
                 <div class="col-6">
                     <div class="cart-canvas-foot-link text-end">
-                        <a href="{{ route('success') }}" class="btn border-0 main-color-green "><i
+                        <a href="{{ route('cart.show') }}" class="btn border-0 main-color-green "><i
                                 class="bi bi-arrow-left me-1"></i> تکمیل خرید</a>
                     </div>
                 </div>
