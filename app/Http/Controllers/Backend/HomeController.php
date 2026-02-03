@@ -17,15 +17,12 @@ class HomeController extends Controller
         // time
         $now = Carbon::now();
 
-        //week information
-
-        $start_of_week = Carbon::now()->startOfWeek()->startOfDay();
-        $end_of_week = Carbon::now()->endOfWeek()->endOfDay();
-
-        $new_products = Product::whereBetween('created_at', [$start_of_week, $end_of_week])
+        //week products
+        $new_products = Product::where('created_at', '>=', Carbon::now()->subDays(7))
             ->latest()
             ->take(10)
             ->get();
+
 
         // اینحا $q یه کوئریه و بعدا تعریف شده که این کوئری میگه که ۴ تا محصول بگیر
         $categories = Category::with(['products' => function($q) {$q->take(4);
