@@ -89,18 +89,30 @@ class CartController extends Controller
     // برای کاربرهایی که لاگین نکردن در سشن میزاریم
     private function showGuestCart()
     {
-        $cartItems = session()->get('cart', []);
-        $count = array_sum(array_column($cartItems, 'quantity'));
-        $isCartEmpty = empty($cartItems);
+        $sessionCart = session()->get('cart', []);
 
-        $realPrice = 0;
-        $totalPrice = 0;
+        //gbt ?
+        $cartItems = collect($sessionCart)->map(function ($item) {
 
-        foreach ($cartItems as $item) {
-            $price = $item['discounted_price'] ?? $item['price'] ?? 0;
-            $totalPrice += $price * ($item['quantity'] ?? 0);
-            $realPrice += ($item['price'] ?? 0) * ($item['quantity'] ?? 0);
-        }
+            $product = Product::find($item['product_id']);
+
+            return (object) [
+                'product' => $product,
+                'quantity' => $item['quantity'],
+            ];
+        })->filter(fn ($item) => $item->product); // اگر محصول حذف شده بود
+
+        $count = $cartItems->sum('quantity');
+        $isCartEmpty = $cartItems->isEmpty();
+
+        $realPrice = $cartItems->sum(fn ($item) =>
+            $item->product->price * $item->quantity
+        );
+
+        $totalPrice = $cartItems->sum(fn ($item) =>
+            ($item->product->discounted_price ?? $item->product->price) * $item->quantity
+        );
+
 
         $data =  [
             'cartItems' => $cartItems,

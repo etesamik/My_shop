@@ -66,6 +66,25 @@ class LoginController extends Controller
 
 
     }
+    // یرای مرج کردم mergeeeeeeeeeeeeeee
+    protected function authenticated(Request $request, $user)
+    {
+        // گرفتن سشن
+        $sessionCart = session()->get('cart', []);
+
+        // محصول رو ببریم سبد خرید
+        // $key => $value این یعنی کلید عضو های داخل سبد یعنی همون ایدی محصول و ایتم که نوستیم  یعنی ولیو و مفدارش
+        foreach ($sessionCart as $productId => $item) {
+            // اگر محصول قبلاً تو دیتابیس بود quantity اضافه بشه
+            $user->cartItems()->updateOrCreate(
+                ['product_id' => $productId],
+                ['quantity' => \DB::raw('quantity + ' . $item['quantity'])]
+            );
+        }
+
+        // 3. پاک کردن session بعد از merge
+        session()->forget('cart');
+    }
 
     // exit ---------------
 

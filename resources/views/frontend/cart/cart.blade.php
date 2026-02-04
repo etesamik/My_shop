@@ -47,8 +47,7 @@
         <div class="cart-product">
             <div class="row gy-4">
                 <div class="col-lg-9">
-                    @if($cartItems)
-                        @foreach($cartItems as $cartItem)
+                    @forelse($cartItems as $cartItem)
                     <div class="cart-product-item mt-3">
                         <div class="content-box">
                             <div class="container-fluid">
@@ -57,7 +56,7 @@
                                         <div class="row gy-2">
                                             <div class="col-md-2 w-100-in-400">
                                                 <div class="image">
-                                                    <img src="{{asset($cartItem->product->image ?? 'default.png')}}" alt=""
+                                                    <img src="{{asset($cartItem->product->image)}}" alt=""
                                                          class="img-fluid">
                                                 </div>
                                             </div>
@@ -65,7 +64,7 @@
                                                 <div class="d-flex justify-content-between align-items-md-start align-items-end flex-wrap">
                                                     <div class="d-flex align-items-start flex-column me-2">
                                                         <div class="title d-flex align-items-center flex-wrap">
-                                                            <h6 class="font-16">{{$cartitem->product->name}}
+                                                            <h6 class="font-16">{{$cartItem->product->name}}
 {{--                                                                <span class="badge ms-2 danger-label rounded-pill">% {{cart_pro.product.discount_percent}}</span>--}}
                                                             </h6>
                                                         </div>
@@ -86,12 +85,12 @@
                                                                     <label>
                                                                         <input type="text" name="count" class="counter quantity-input"
                                                                                data-id="{{$cartItem->product->id}}"
-                                                                               data-url="{% url 'Products:cart_update' cart_pro.id %}"
-                                                                               value="{{$cartItem->product->quantity}}">
+{{--                                                                               data-url="{{ route('cart.update', $cartItem->product->id) }}"--}}
+                                                                               value="{{$cartItem->quantity}}">
                                                                     </label>
                                                                 </div>
                                                                 <div class="remove danger-label ms-3">
-                                                                    <form action="{{asset('cart.remove', $cartItem->id)}}" method="POST" style="display:inline;">
+                                                                    <form action="{{route('cart.remove', $cartItem->product->id)}}" method="POST" style="display:inline;">
                                                                         @csrf
                                                                         <button type="submit" class="btn" style="background: none; border: none; padding: 0; cursor: pointer;" title="حذف">
                                                                             <i class="bi bi-trash-fill"></i>
@@ -106,7 +105,8 @@
                                                         <div class="product-box-price flex-column justify-content-end align-items-end">
                                                             <div class="product-box-price-price d-flex">
                                                                 <h5 class="title-font main-color-green-color h2 mb-2">
-                                                                    {{number_format($cartItem->product->discounted_pricecart_pro ?? $cartItem->product->price)}}</h5>
+                                                                    {{ number_format($cartItem->product->discounted_price ?? $cartItem->product->price) }}
+                                                                </h5>
                                                                 <p class="mb-0 text-muted-two ms-1 ">تومان</p>
                                                             </div>
                                                         </div>
@@ -128,13 +128,12 @@
                             </div>
                         </div>
                     </div>
-                        @endforeach
-                    @else
+                    @empty
                     <div class="text-center">
                         <h1>سبد خرید شما خالی است</h1>
                         <a class="main-color-one-color h4" href="{{asset('home')}}">اضافه کردن به سبد خرید</a>
                     </div>
-                            @endif
+                            @endforelse
 
                 </div>
                 <div class="col-lg-3">
@@ -154,13 +153,13 @@
                                 <div class="d-flex factor-item flex-column mb-3 align-items-start justify-content-between">
                                     <h5 class="title-font mb-0 h6">حمل و نقل</h5>
                                     <form action="">
-                                        {% comment %} <div class="form-check mt-3">
+                                        <div class="form-check mt-3">
                                             <input type="radio" checked class="form-check-input" name="post"
                                                    id="post-1">
                                             <label for="post-1" class="form-check-label">
                                                 پیک موتوری اختصاصی (کمتر از 5 ساعت): 80,000 تومان
                                             </label>
-                                        </div> {% endcomment %}
+                                        </div>
                                         <div class="form-check mt-3">
                                             <input type="radio" checked class="form-check-input" name="post" id="post-2">
                                             <label for="post-2"  class="form-check-label">
