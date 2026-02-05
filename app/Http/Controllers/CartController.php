@@ -86,17 +86,24 @@ class CartController extends Controller
 
 
     }
+
+
+
     // برای کاربرهایی که لاگین نکردن در سشن میزاریم
+
     private function showGuestCart()
     {
         $sessionCart = session()->get('cart', []);
 
-        //gbt ?
+        //gpt ?
+        // اینحا ما ایتم ها رو به شکل ارایه داریم که باید تبدیل کنیم به ابجمت برای استفاده راحت در blade یعنی هر عضو کارت ایتم رو ابجکت میکنیم
         $cartItems = collect($sessionCart)->map(function ($item) {
 
             $product = Product::find($item['product_id']);
 
             return (object) [
+                'id' => $item['product_id'], // 👈 خیلی مهم
+                'product_id' => $item['product_id'],
                 'product' => $product,
                 'quantity' => $item['quantity'],
             ];
@@ -141,11 +148,17 @@ class CartController extends Controller
 
     private function addToGuestCart(Product $product)
     {
+        // توی تابع ما خود محصول رو بصورت ابجکت میگیریم
+
+        //اینحا یعنی اکر کارت چیزی داخلش داره بیار اگر نداره ارایه خالی بده
         $cart = session()->get('cart', []);
 
+        // حالا اینجا مبینیم که از محصول موجوده تو سبد یا نه. ما کارت رو با ایدی پروداکت میشناسیم
         if (isset($cart[$product->id])) {
+            // اینحا میگیم که محصول توی کارت با ایدی پروداکت، تعدادش، حالا یکی بهش اضافه کن
             $cart[$product->id]['quantity']++;
         } else {
+            // کلید = آیدی محصوله
             $cart[$product->id] = [
                 'product_id' => $product->id,
                 'name' => $product->name,

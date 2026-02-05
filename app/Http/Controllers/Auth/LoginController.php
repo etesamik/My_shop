@@ -9,6 +9,27 @@ use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
+
+    // for merge -------------
+    protected function mergeSessionCartToUser($user)
+    {
+        // گرفتن سبد خرید از session
+        $sessionCart = session()->get('cart', []);
+
+        foreach ($sessionCart as $productId => $item) {
+
+            $user->cartItems()->updateOrCreate(
+                ['product_id' => $productId],
+                ['quantity' => \DB::raw('quantity + ' . $item['quantity'])]
+            );
+        }
+        // پاک کردن سشن بعد از انتقال
+        session()->forget('cart');
+    }
+
+
+
+
     //show login form----------
     public function showLogin()
     {
@@ -35,8 +56,11 @@ class LoginController extends Controller
         // try for login
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+            $this->mergeSessionCartToUser(Auth::user());
             return redirect()->intended('/');
         }
+
+
 
         // error
         return back()->withErrors([
@@ -66,26 +90,6 @@ class LoginController extends Controller
 
 
     }
-    // یرای مرج کردم mergeeeeeeeeeeeeeee
-    protected function authenticated(Request $request, $user)
-    {
-        // گرفتن سشن
-        $sessionCart = session()->get('cart', []);
-
-        // محصول رو ببریم سبد خرید
-        // $key => $value این یعنی کلید عضو های داخل سبد یعنی همون ایدی محصول و ایتم که نوستیم  یعنی ولیو و مفدارش
-        foreach ($sessionCart as $productId => $item) {
-            // اگر محصول قبلاً تو دیتابیس بود quantity اضافه بشه
-            $user->cartItems()->updateOrCreate(
-                ['product_id' => $productId],
-                ['quantity' => \DB::raw('quantity + ' . $item['quantity'])]
-            );
-        }
-
-        // 3. پاک کردن session بعد از merge
-        session()->forget('cart');
-    }
-
     // exit ---------------
 
     public function logout(Request $request){

@@ -766,10 +766,13 @@
             <div class="row align-items-center">
                 <div class="col-6">
                     <div class="cart-canvas-foot-sum">
+                        @php
+                            $total = array_sum(array_map(function($item) {
+                                return $item['price'] * $item['quantity'];
+                            }, $cart_items));
+                        @endphp
                         <p class="text-muted mb-2">جمع کل</p>
-                        <h5>{{ number_format(array_sum(array_map(function($item) {
-                        return $item['price'] * $item['quantity'];
-                    }, $cart_items))) }} تومان</h5>
+                        <h5>{{ number_format($total) }} تومان</h5>
                     </div>
                 </div>
                 <div class="col-6">

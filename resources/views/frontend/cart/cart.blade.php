@@ -6,7 +6,7 @@
 
 <!--============ start main content ==============-->
 
-@section("contend")
+@section('content')
 
 <section class="content">
     <div class="container-fluid">
@@ -56,7 +56,7 @@
                                         <div class="row gy-2">
                                             <div class="col-md-2 w-100-in-400">
                                                 <div class="image">
-                                                    <img src="{{asset($cartItem->product->image)}}" alt=""
+                                                    <img src="{{asset($cartItem->product->primary_image)}}" alt=""
                                                          class="img-fluid">
                                                 </div>
                                             </div>

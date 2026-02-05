@@ -322,7 +322,7 @@
                                    data-bs-title="افزودن به علاقه مندی ها"><i class="bi bi-heart"></i>
                                 </a>
                                 <a class="mb-1 border-ui">
-                                    <form action="{{route('cart.add', $new_pro->id)}}" method="POST" style="display:inline;">
+                                    <form action="{{route('cart.add', $new_pro)}}" method="POST" style="display:inline;">
                                         @csrf
                                         <button type="submit" class="mb-1 border-ui" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="افزودن به سبد خرید" style="background: none; border: none; padding: 0;">
                                             <i class="bi bi-bag-plus"></i>
@@ -332,7 +332,7 @@
 
                             </div>
                         </div>
-                        <a href="{{route('products.detail', $new_pro->slug)}}">
+                        <a href="{{route('product.detail', $new_pro->slug)}}">
                             <div class="product-image">
                                 <img src="{{ asset($new_pro->primary_image) }}" loading="lazy" alt=""
                                      class="img-fluid one-image">
@@ -421,28 +421,26 @@
     <div class="container-fluid">
         <div class="border bg-white slider-parent border-ui px-3 rounded-3">
             <div class="row">
-                {% for cat in categories %}
+                @foreach($categories as $cat)
                 <div class="col-lg-3 col-sm-6">
                     <div class="product-group-item">
                         <h5 class="fw-bold with-highlight ms-1">انواع</h5>
                         <p class="text-muted">بر اساس سلیقه شما</p>
                         <div class="row">
-                            {% with category_products=category_products|get_item:cat %}
-                            {% for product in category_products %}
+                            @foreach($category->products as $product)
                             <div class="col-6">
-                                <a href="">  <!-- Assuming you have a URL for product detail -->
-                                    <img src="" alt="">  <!-- Adjust according to your model -->
+                                <a href="{{ route('product.detail', $product->id) }}">  <!-- Assuming you have a URL for product detail -->
+                                    <img src="{{ asset($product->primary_image ?? 'images/default.png') }}" alt="{{ $product->name }}">  <!-- Adjust according to your model -->
                                 </a>
                             </div>
-                            {% endfor %}
-                            {% endwith %}
+                            @endforeach
                         </div>
                         <div class="text-center py-3">
-                            <a href="" class="main-color-one-color">مشاهده <i class="bi bi-chevron-left font-14"></i></a>
+                            <a href="{{ route('category.show', $category->id) }}" class="main-color-one-color">مشاهده <i class="bi bi-chevron-left font-14"></i></a>
                         </div>
                     </div>
                 </div>
-                {% endfor %}
+                @endforeach
             </div>
         </div>
     </div>
@@ -519,54 +517,5 @@
 
 <!--============ end quick select   ==============-->
 
-<!--============ start blog-slider   ==============-->
-
-<section class="blog-slider free-swiper">
-    <div class="container-fluid position-relative">
-        <div class="section-title mb-3">
-            <div class="row gy-3 align-items-center">
-                <div class="col-sm-8">
-                    <div class="section-title-title">
-                        <h2 class="fw-900 h4">مطالب<span class="with-highlight ms-1">وبلاگ</span>
-                        </h2>
-                        <div class="Dottedsquare"></div>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="section-title-link text-sm-end text-start">
-                        <a class="btn main-color-two-bg border-0" href=""> مشاهده همه</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="swiper blog-slider-sw">
-            <div class="swiper-wrapper">
-                {% for blog in blogs %}
-                <div class="swiper-slide">
-                    <div class="blog-item border-ui">
-                        <a href="">
-                            <div class="image">
-                                <img src="" alt="" class="img-fluid">
-                            </div>
-                            <div class="title">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <div class="title-item d-flex align-items-center main-color-one-bg px-3 py-2">
-                                        <span class="font-14 text-white"></span>
-                                    </div>
-                                    <div class="title-item d-flex align-items-center main-color-one-bg p-3 py-2 ms-5">
-                                        <span class="font-14 text-white"></span>
-                                    </div>
-                                </div>
-                                <h4 class="font-16 text-overflow-1 h4 pb-3"></h4>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                {% endfor %}
-
-            </div>
-        </div>
-    </div>
-</section>
-
+\
 @endsection

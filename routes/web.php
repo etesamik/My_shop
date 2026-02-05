@@ -26,11 +26,14 @@ Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.
 Route::post('/cart/empty', [CartController::class, 'emptyCart'])->name('cart.empty');
 
 // products ------------------
-Route::get('/product/{slug}', [ProductController::class, 'detail'])->name('products.detail');
+Route::get('/product/{slug}', [ProductController::class, 'detail'])->name('product.detail');
 
-//
 
-// payment -------------------این فعلا ازمایشیه
+
+// categories ----------------
+Route::get('/category/{slug}', [ProductController::class, 'category'])->name('category.show');
+
+// payment ------------------- این فعلا ازمایشیه
 Route::get('/success', function (){
     return view('frontend.payment.successpayment');
 })->name('success');
