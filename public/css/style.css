@@ -2922,7 +2922,7 @@ p.mb-0.text-muted-two.ms-1 {
 }
 
 /*========================== end page compare ==========================*/
-/*========================== start page checkout ==========================*/
+/*========================== start page order ==========================*/
 .image-selector ul {
     list-style-type: none;
     flex-wrap: wrap;
@@ -2997,7 +2997,7 @@ p.mb-0.text-muted-two.ms-1 {
     border: 1px solid var(--bs-info);
 }
 
-/*========================== end page checkout ==========================*/
+/*========================== end page order ==========================*/
 /*========================== start page delivery address ==========================*/
 .da-parent {
     text-align: center;

@@ -6,6 +6,7 @@
 
     {{-- title block --}}
     @yield('title')
+    @yield('css')
 
     <script src="{{ asset('js/script.js') }}"></script>
 

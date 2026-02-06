@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\CartItem;
 
-class LoginController extends Controller
+class login extends Controller
 {
     protected function authenticated(Request $request, $user)
     {

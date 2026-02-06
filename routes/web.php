@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\order\OrderController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -33,7 +34,13 @@ Route::get('/product/{slug}', [ProductController::class, 'detail'])->name('produ
 // categories ----------------
 Route::get('/category/{slug}', [ProductController::class, 'category'])->name('category.show');
 
+
+// order ---------------------
+Route::get('/cart/order', [OrderController::class, 'showCheckout'])->name('cart.order');
+
 // payment ------------------- این فعلا ازمایشیه
 Route::get('/success', function (){
     return view('frontend.payment.successpayment');
 })->name('success');
+
+

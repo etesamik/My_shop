@@ -56,7 +56,7 @@ class CartController extends Controller
 
 
     // برای کاربرها که لاگین کردن
-    private function showUserCart()
+    public function showUserCart()
     {
         $cartItems = Auth::user()
             ->cartItems()
@@ -91,7 +91,7 @@ class CartController extends Controller
 
     // برای کاربرهایی که لاگین نکردن در سشن میزاریم
 
-    private function showGuestCart()
+    public function showGuestCart()
     {
         $sessionCart = session()->get('cart', []);
 
@@ -102,8 +102,7 @@ class CartController extends Controller
             $product = Product::find($item['product_id']);
 
             return (object) [
-                'id' => $item['product_id'], // 👈 خیلی مهم
-                'product_id' => $item['product_id'],
+                'id' => $item['product_id'],
                 'product' => $product,
                 'quantity' => $item['quantity'],
             ];

@@ -3,14 +3,10 @@
 
 
 
+    <link rel="stylesheet" href="{{ asset('plugin/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugin/tagify/tagify.css') }}">
 
-
-<!-- These scripts are specific to this page   -->
-<link rel="stylesheet" href="assets/plugin/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css">
-<link href="assets/plugin/tagify/tagify.css" rel="stylesheet">
-{% endblock css %}
-
-{% block content %}
+@section('content')
 <!--============ start main content ==============-->
 
 <section class="content mt-3">
@@ -22,8 +18,8 @@
                         <ol class="breadcrumb mb-0">
                             <li class="breadcrumb-item"><a href="/" class="font-14 text-muted">خانه</a></li>
                             <li class="breadcrumb-item"><a href="#" class="font-14 text-muted">فروشگاه</a></li>
-                            <li class="breadcrumb-item"><a href="#" class="font-14 text-muted">{{product.category.name}}</a></li>
-                            <li class="breadcrumb-item active main-color-one-color font-14" aria-current="page">{{product.name}}</li>
+                            <li class="breadcrumb-item"><a href="#" class="font-14 text-muted">{{$product->category->name}}</a></li>
+                            <li class="breadcrumb-item active main-color-one-color font-14" aria-current="page">{{$product->name}}</li>
                         </ol>
                     </nav>
                 </div>
@@ -64,37 +60,35 @@
                         <div style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff"
                              class="swiper product-gallery">
                             <div class="swiper-wrapper" title="برای بزرگنمایی تصویر دابل کلیک کنید">
-                                {% if product.image %}
+                                @if($product->primary_image)
                                 <div class="swiper-slide">
                                     <div class="swiper-zoom-container">
-                                        <img class="img-fluid" src="{{ product.image.url }}" alt=""/>
+                                        <img class="img-fluid" src="{{asset($product->primary_image)}}" alt=""/>
                                     </div>
                                 </div>
-                                {% endif %}
+                                @endif
 
-                                {% if product.image_1 %}
-                                <div class="swiper-slide">
-                                    <div class="swiper-zoom-container">
-                                        <img class="img-fluid" src="{{ product.image_1.url }}" alt=""/>
-                                    </div>
-                                </div>
-                                {% endif %}
 
-                                {% if product.image_2 %}
-                                <div class="swiper-slide">
+                                    <div class="swiper-slide">
                                     <div class="swiper-zoom-container">
-                                        <img class="img-fluid" src="{{ product.image_2.url }}" alt=""/>
+                                        <img class="img-fluid" src="" alt=""/>
                                     </div>
                                 </div>
-                                {% endif %}
 
-                                {% if product.image_3 %}
                                 <div class="swiper-slide">
                                     <div class="swiper-zoom-container">
-                                        <img class="img-fluid" src="{{ product.image_3.url }}" alt=""/>
+                                        <img class="img-fluid" src="" alt=""/>
                                     </div>
                                 </div>
-                                {% endif %}
+
+
+
+                                <div class="swiper-slide">
+                                    <div class="swiper-zoom-container">
+                                        <img class="img-fluid" src="" alt=""/>
+                                    </div>
+                                </div>
+
                             </div>
 
                             <div class="swiper-button-next d-none d-lg-flex"></div>
@@ -103,29 +97,29 @@
                         </div>
                         <div class="swiper product-gallery-thumb">
                             <div class="swiper-wrapper">
-                                {% if product.image %}
+                                @if($product->primary_image)
                                 <div class="swiper-slide">
-                                    <img class="img-fluid" src="{{ product.image.url }}" alt=""/>
+                                    <img class="img-fluid" src="{{asset($product->primary_image) }}" alt=""/>
                                 </div>
-                                {% endif %}
+                                @endif
 
-                                {% if product.image_1 %}
-                                <div class="swiper-slide">
-                                    <img class="img-fluid" src="{{ product.image_1.url }}" alt=""/>
-                                </div>
-                                {% endif %}
 
-                                {% if product.image_2 %}
-                                <div class="swiper-slide">
-                                    <img class="img-fluid" src="{{ product.image_2.url }}" alt=""/>
-                                </div>
-                                {% endif %}
+{{--                                <div class="swiper-slide">--}}
+{{--                                    <img class="img-fluid" src="" alt=""/>--}}
+{{--                                </div>--}}
 
-                                {% if product.image_3 %}
-                                <div class="swiper-slide">
-                                    <img class="img-fluid" src="{{ product.image_3.url }}" alt=""/>
-                                </div>
-                                {% endif %}
+
+
+{{--                                <div class="swiper-slide">--}}
+{{--                                    <img class="img-fluid" src="" alt=""/>--}}
+{{--                                </div>--}}
+
+
+
+{{--                                <div class="swiper-slide">--}}
+{{--                                    <img class="img-fluid" src="" alt=""/>--}}
+{{--                                </div>--}}
+
                             </div>
 
                         </div>
@@ -143,13 +137,13 @@
                             <ol class="breadcrumb mb-0">
                                 <li class="breadcrumb-item active" aria-current="page">
                                     <a class="main-color-one-color font-16" href="">
-                                        {{product.category}}
+                                        {{$product->category->name}}
                                     </a>
                                 </li>
                             </ol>
                         </nav>
                         <div class="title mt-md-0 mt-3">
-                            <h6 class="font-16 mb-2">{{product.name}}</h6>
+                            <h6 class="font-16 mb-2">{{$product->name}}</h6>
                             <div class="d-flex align-items-center pb-2">
                                 <div class="star">
                                     <i class="bi bi-star-fill"></i>
@@ -170,14 +164,15 @@
                             <div class="product-meta-feature-items">
                                 <h5 class="title font-16 mb-2 icon-circle">ویژگی های کالا</h5>
                                 <ul class="navbar-nav">
-                                    {% for key, value in product.specs.items %}
-                                    {% if forloop.counter <= 5 %}
-                                    <li class="nav item"><span>{{ key }}:</span><strong>{{ value }} </strong></li>
-                                    {% endif %}
-
-                                    {% empty %}
+                                    @if($product->attributes->count())
+                                            @foreach($product->attributes->take(5) as $attribute)
+                                    <li class="nav item"><span>{{$attribute->name}}:
+                                        </span><strong>{{ $attribute->pivot->value }} </strong></li>
+                                        @endforeach
+                                    @else
                                     <li class="nav item">ویژگی‌ای ثبت نشده است.</li>
-                                    {% endfor %}
+
+                                    @endif
                                 </ul>
                             </div>
                             <br>
@@ -228,11 +223,11 @@
                                 </div>
                                 <div class="text-start ms-3">
 
-                                    {% if product.is_exists %}
+                                    @if($product->status)
                                     <h6 class="fw-normal font-16">موجود در انبار فروشنده</h6>
-                                    {% else %}
+                                    @else
                                     <h6 class="fw-normal font-16">نا موجود</h6>
-                                    {% endif %}
+                                    @endif
 
                                 </div>
                             </div>
@@ -245,29 +240,29 @@
                                     </span>
                             </div>
 
-                            {% if product.discount_percent %}
+                            @if($product->discounted_price)
                             <div class="price d-flex flex-column justify-content-end">
                                 <div class="d-flex align-items-center">
-                                    <span class="fw-bold fs-3 def-color">{{product.discounted_price | intcomma}}</span>
-                                    <span class="badge main-color-one-bg rounded-pill ms-2">{{product.discount_percent}}%</span>
+                                    <span class="fw-bold fs-3 def-color">{{number_format($product->discounted_price)}}</span>
+{{--                                    <span class="badge main-color-one-bg rounded-pill ms-2">{{product.discount_percent}}%</span>--}}
                                 </div>
                                 <div class="d-flex justify-content-center align-items-center">
-                                    <span class="text-muted font-14 text-decoration-line-through">{{product.price | intcomma}}</span>
+                                    <span class="text-muted font-14 text-decoration-line-through">{{number_format($product->price)}}</span>
                                     <span class="text-muted font-14 ms-2">تومان</span>
                                 </div>
                             </div>
-                            {% else %}
+                            @else
                             <div class="price d-flex flex-column justify-content-end">
                                 <div class="d-flex align-items-center">
-                                    <span class="fw-bold fs-6 def-color">{{product.price | intcomma}} تومان</span>
+                                    <span class="fw-bold fs-6 def-color">{{number_format($product->price)}} تومان</span>
                                 </div>
                             </div>
-                            {% endif %}
+                            @endif
 
                         </div>
                         <div class="se-cart-item">
-                            <form action="{% url 'Products:add_to_cart' product.id %}" method="POST" class="w-100 d-flex flex-column justify-content-center align-items-center mt-3">
-                                {% csrf_token %}
+                            <form action="{{route('cart.add' , $product)}}" method="POST" class="w-100 d-flex flex-column justify-content-center align-items-center mt-3">
+                                @csrf
                                 <div class="counter">
                                     <label>
                                         <input type="number" name="count" class="counter text-center" value="1" min="1">
@@ -299,25 +294,25 @@
                             <nav class="navbar">
                                 <ul class="navbar-nav justify-content-md-between justify-content-center">
                                     <li class="nav-item d-flex align-items-center">
-                                        <img alt="" src="assets/image/feature/box.png">
+                                        <img alt="" src="{{asset('image/feature/box.png')}}">
                                         <span>امکان تحویل اکسپرس</span>
                                     </li>
                                     <li class="nav-item d-flex align-items-center">
-                                        <img alt="" src="assets/image/feature/headphone.png">
+                                        <img alt="" src="{{asset('image/feature/headphone.png')}}">
                                         <span>24 ساعته 7 روز هفته</span>
                                     </li>
                                     <li class="nav-item d-flex align-items-center">
-                                        <img alt="" src="assets/image/feature/safe.png">
+                                        <img alt="" src="{{asset('image/feature/safe.png')}}">
                                         <span>امکان پرداخت در محل
                                         </span>
                                     </li>
                                     <li class="nav-item d-flex align-items-center">
-                                        <img alt="" src="assets/image/feature/seven.png">
+                                        <img alt="" src="{{asset('image/feature/seven.png')}}">
                                         <span>7 روز ضمانت بازگشت کالا
                                         </span>
                                     </li>
                                     <li class="nav-item d-flex align-items-center">
-                                        <img alt="" src="assets/image/feature/money.png">
+                                        <img alt="" src="{{asset('image/feature/money.png')}}">
                                         <span>ضمانت اصالت کالا
                                         </span>
                                     </li>
@@ -329,7 +324,9 @@
             </div>
         </div>
     </div>
+    </div>
 </section>
+
 
 <!--============ end main content ==============-->
 
@@ -383,7 +380,7 @@
                                             <h6 class="font-22 mb-2 title-font title-line-bottom">معرفی محصول</h6>
 
                                             <p>
-                                                {{product.description}}
+                                                {{$product->description}}
                                             </p>
                                         </div>
                                     </div>
@@ -394,17 +391,20 @@
                                             <div class="read-more-wrap">
                                                 <h6 class="font-26 mb-2 title-font title-line-bottom"> ویژگی های کالا
                                                 </h6>
-                                                {% for key, value in product.specs.items %}
-                                                <li class="nav item"><strong>{{ key }}:</strong><span>{{ value }} </span></li>
-                                                {% empty %}
+                                                @if($product->attributes->count())
+                                                @foreach($product->attributes as $attribute)
+                                                <li class="nav item"><strong>{{$attribute->name}}:</strong><span>{{ $attribute->pivot->value }} </span></li>
+                                                    @endforeach
+                                                        @else
                                                 <li class="nav item">ویژگی‌ای ثبت نشده است.</li>
-                                                {% endfor %}
+
+                                                        @endif
                                             </div>
                                             <!-- پایان والد بیشتر کمتر -->
                                             <label class="read-more-trigger" for="readMore2"></label>
                                         </div>
                                     </div>
-                                    <!-- <div class="tab-pane fade product-comment-content" id="productComment-pane">
+                                    <div class="tab-pane fade product-comment-content" id="productComment-pane">
 
                                         <div class="comment-form">
                                             <h6 class="font-26 mb-2 title-font title-line-bottom">نظرت در مورد این
@@ -510,8 +510,8 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div> -->
-                                    <!-- <div class="col-md-8">
+                                                    </div>
+                                    <div class="col-md-8">
                                         <div class="row">
                                             <div class="col-sm-6">
                                                 <div class="form-floating mb-3 form-group">
@@ -823,9 +823,9 @@
                          role="tabpanel">
                         <h4 class="title-font title-line-bottom">پرسش و پاسخ</h4>
                         <span class="fw-bold d-block mt-2 text-muted font-12">پرسش خود را در مورد محصول مطرح
-                نمایید</span> -->
+                نمایید</span>
 
-                                    <!-- <div class="box_questions mt-4">
+                                    <div class="box_questions mt-4">
                                         <form>
                                             <div class="form-group">
                                                 <label class="d-block">
@@ -837,9 +837,9 @@
                                                         type="submit">ثبت پرسش
                                                 </button>
                                             </div>
-                                        </form> -->
+                                        </form>
 
-                                    <!-- <div class="box_filter mt-5 pb-3">
+                                    <div class="box_filter mt-5 pb-3">
                                         <div class="row align-items-end">
                                             <div class="col-md-4 bf1">
                                                 <h4 class="title-font title-line-bottom">پرسش های
@@ -862,8 +862,8 @@
                                             </div>
                                         </div>
                                     </div>
-<!--  -->
-                                    <!-- <div class="box_questions mt-4">
+
+                                     <div class="box_questions mt-4">
                                         <div class="row bs-qu">
                                             <div class="col-lg-2 bq1 text-center">
                                                 <i class="bi bi-question-circle-fill"></i>
@@ -1005,98 +1005,15 @@
                 </div>
             </div>
         </div>
-    </div> -->
-                                    <!-- <div class="col-xl-3 d-xl-block d-none">
+    </div>
+                                    <div class="col-xl-3 d-xl-block d-none">
                                         <div class="position-sticky top-0">
 
                                         </div>
                                     </div>
-                                </div> -->
                                 </div>
+                     </div>
 </section>
-
-<!--============ end product description ==============-->
-
-<!--============ start product slider ==============-->
-
-<section class="product-slider  site-slider">
-    <div class="container-fluid">
-        <div class="section-title mb-3">
-            <div class="section-title-title">
-                <h2 class="fw-900 h4">محصولات<span class="with-highlight ms-1">مشابه</span>
-                </h2>
-                <div class="Dottedsquare"></div>
-            </div>
-        </div>
-        <div class="swiper pro-slider">
-            <div class="swiper-wrapper">
-                {% for p in similar_products %}
-                <div class="swiper-slide">
-                    <div class="product-box border-ui">
-                        <div class="product-timer position-relative">
-                            <div class="product-header-btn flex-column position-absolute top-0">
-                                <!-- <a href="" class="mb-1 border-ui" data-bs-toggle="tooltip" data-bs-placement="right"
-                                   data-bs-title="افزودن به علاقه مندی ها"><i class="bi bi-heart"></i></a> -->
-                                <a href="" class="mb-1 border-ui" data-bs-toggle="tooltip" data-bs-placement="right"
-                                   data-bs-title="افزودن به سبد خرید"><i class="bi bi-bag-plus"></i></a>
-                            </div>
-                        </div>
-                        <a href="{% url 'Products:product_detail' slug=p.slug %}">
-                            <div class="product-image">
-                                <img src="{{ p.image.url }}" loading="lazy" alt="{{ p.name }}"
-                                     class="img-fluid one-image">
-                                {% if p.image_1 %}
-                                <img src="{{ p.image_1.url }}" loading="lazy" alt="{{ p.name }}"
-                                     class="img-fluid two-image">
-                                {% endif %}
-                            </div>
-                            <div class="product-title mb-3">
-                                <div class="title">
-                                    <span class="text-muted text-overflow-1">{{ p.slug }}</span>
-                                    <p class="text-overflow-1 mt-2">{{ p.name }}</p>
-                                </div>
-                                <div class="rating">
-                                    <div class="number"><span class="text-muted font-12">(15+) 4.8</span></div>
-                                    <div class="icon"><i class="bi bi-star-fill"></i></div>
-                                </div>
-                            </div>
-                            <div class="product-action">
-                                {% if p.discount_percent %}
-                                <div class="discount">
-
-                                    <div class="no-hover border-0 rounded-3 main-color-one-bg p-2">
-                                        <span class="text-white">{{p.discount_percent}}%</span>
-                                    </div>
-                                </div>
-                                <div class="price">
-                                    <p class="new-price">{{p.discounted_price | intcomma }} تومان</p>
-                                    <p class="old-price">{{p.price | intcomma }} تومان</p>
-
-                                </div>
-                                {% else %}
-                                <div class="price">
-                                    <p class="new-price">{{ p.price|intcomma }} تومان</p>
-                                </div>
-                                {% endif %}
-                            </div>
-                        </a>
-
-                    </div>
-
-                </div>
-                {% empty %}
-                <p class="text-muted">محصول مشابهی پیدا نشد.</p>
-                {% endfor %}
-
-                <div class="swiper-button-next"></div>
-                <div class="swiper-button-prev"></div>
-            </div>
-        </div>
-</section>
-
-<!--============ end product slider ==============-->
-
-
 
 <!--============ start floatings button ==============-->
 
@@ -1231,9 +1148,7 @@
 
 <!--============ end chart modal ==============-->
 
-
-
-{% endblock content %}
+@endsection
 
 
 
