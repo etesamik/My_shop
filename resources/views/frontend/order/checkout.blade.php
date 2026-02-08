@@ -11,7 +11,7 @@
                 <nav class="navbar navbar-expand">
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a href="/products/cart/" class="nav-link">
+                            <a href="{{route('cart.show')}}" class="nav-link">
                                 <span>1</span>
                                 <p>سبد خرید</p>
                             </a>
@@ -34,8 +34,8 @@
         </div>
     </div>
 
-    <form action="{% url 'Products:checkout' %}" method="post">
-        {% csrf_token %}
+    <form action="{{route('cart.checkout.save')}}" method="post">
+        @csrf
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-9">
@@ -43,20 +43,20 @@
                         <div class="detail-order mb-4">
                             <div class="detail-order-item d-flex align-items-center">
                                 <h6><i class="bi bi-pin-map-fill me-1"></i> آدرس تحویل:</h6>
-                                <span class="ms-2 text-muted">{{ selected_address.address_line|default:first_address.address_line }}
+                                <span class="ms-2 text-muted">  {{ $selectedAddress->address ?? $firstAddress->address ?? 'آدرس ثبت نشده' }}
 </span>
-                                <!-- <input type="hidden" name="address" value="{{ first_address.id }}"> -->
+                                <input type="hidden" name="address" value="{{ $firstAddress->id ?? null }}">
 
                             </div>
                             <div class="detail-order-item mt-3 d-flex align-items-center">
                                 <h6><i class="bi bi-person-fill me-1"></i>تحویل گیرنده:</h6>
-                                <span class="ms-2 text-muted">{{ selected_address.full_name|default:first_address.full_name }}</span>
+                                <span class="ms-2 text-muted">{{$fullName}}</span>
                             </div>
                             <div class="detail-order-item mt-3 d-flex align-items-center">
                                 <h6><i class="bi bi-telephone-fill me-1"></i>شماره تماس:</h6>
-                                <span class="ms-2 text-muted">{{ selected_address.phone_number|default:first_address.phone_number }}</span>
+                                <span class="ms-2 text-muted">{{$selectedAddress->phone ?? $firstAddress->name ?? null}}</span>
                             </div>
-                            <a href="/accounts/addresses" class="btn mt-3 btn-dark btn-sm">ویرایش</a>
+                            <a href="{{route('show.addresses')}}" class="btn mt-3 btn-dark btn-sm">ویرایش</a>
                         </div>
                         <div class="cart-product-item my-5">
                             <div class="row">
@@ -64,9 +64,9 @@
                                     <div class="cart-items border-end">
 
                                         <div class="item">
-                                            {% for cart_pro in cart_items %}
+                                            @foreach($cartItems as $cart_pro)
                                             <div class="image text-start">
-                                                <img src="{{cart_pro.product.image.url}}" alt=""
+                                                <img src="{{asset($cart_pro->product->primary_image)}}" alt=""
                                                      class="img-fluid d-inline-block w-100-px">
                                             </div>
                                             <div class="d-flex justify-content-between align-items-md-start align-items-end flex-wrap">
@@ -79,7 +79,7 @@
                                                         </div> -->
                                                         <div class="item d-flex align-items-center">
 
-                                                            <div class="saller-name mx-2">"{{cart_pro.product.slug}}"</div>
+                                                            <div class="saller-name mx-2">"{{$cart_pro->product->slug}}"</div>
 
                                                         </div>
                                                         <div class="item d-flex align-items-center mt-2">
@@ -94,7 +94,7 @@
                                                             <div class="counter">
                                                                 <label>
                                                                     <input type="text" name="count" class="counter"
-                                                                           value="{{cart_pro.quantity}}">
+                                                                           value="{{$cart_pro->quantity}}">
                                                                 </label>
                                                             </div>
                                                             <div class="remove danger-label ms-3">
@@ -107,7 +107,7 @@
                                                 </div>
 
                                             </div>
-                                            {% endfor %}
+                                            @endforeach
                                         </div>
                                     </div>
                                 </div>
@@ -125,18 +125,18 @@
                             <div class="image-selector">
                                 <nav class="navbar navbar-expand">
                                     <ul class="navbar-nav">
-                                        {% for day in delivery_dates %}
+                                        @foreach($deliveryDates as $day)
                                         <li class="nav-item">
-                                            <input type="radio" name=" " id="{{ day.id }}" value="{{ day.value }}" {% if forloop.first %}checked{% endif %}>
+                                            <input type="radio" name="delivery_date" id="{{ $day['id'] }}" value="{{ $day['value'] }}" {{ $loop->first ? 'checked' : '' }}>
 
-                                            <label for="{{ day.id }}" class="d-inline-block border border-2">
-                                                <span class="send-item {% if forloop.first %}active{% endif %}">
-                                                <span class="d-block fw-bold h6 text-center">{{ day.label }}</span>
-                                                <span class="font-14 d-block text-center mt-1 mb-0 text-muted">{{ day.full_date }}</span>
+                                            <label for="{{ $day['id'] }}" class="d-inline-block border border-2">
+                                                <span class="send-item  {{ $loop->first ? 'active' : '' }}">
+                                                <span class="d-block fw-bold h6 text-center">{{ $day['label'] }}</span>
+                                                <span class="font-14 d-block text-center mt-1 mb-0 text-muted">{{ $day['full_date'] }}</span>
                                                 </span>
                                             </label>
                                         </li>
-                                        {% endfor %}
+                                        @endforeach
                                     </ul>
                                 </nav>
                             </div>
@@ -198,35 +198,35 @@
                                         <li class="nav-item">
                                             <input type="radio" name="payment_gateway" id="meli" value="meli">
                                             <label for="meli">
-                                                <img src="{% static 'assets/image/bank/bank-meli.png' %}" alt="بانک ملی">
+                                                <img src="{{asset('image/bank/bank-meli.png')}}" alt="بانک ملی">
                                             </label>
                                         </li>
 
                                         <li class="nav-item">
                                             <input type="radio" name="payment_gateway" id="mellat" value="mellat">
                                             <label for="mellat">
-                                                <img src="{% static 'assets/image/bank/bank-mellat.png' %}" alt="بانک ملت">
+                                                <img src="{{asset('image/bank/bank-mellat.png')}}" alt="بانک ملت">
                                             </label>
                                         </li>
 
                                         <li class="nav-item">
                                             <input type="radio" name="payment_gateway" id="saderat" value="saderat">
                                             <label for="saderat">
-                                                <img src="{% static 'assets/image/bank/bank-saderat.png' %}" alt="بانک صادرات">
+                                                <img src="{{asset('image/bank/bank-saderat.png')}}" alt="بانک صادرات">
                                             </label>
                                         </li>
 
                                         <li class="nav-item">
                                             <input type="radio" name="payment_gateway" id="saman" value="saman">
                                             <label for="saman">
-                                                <img src="{% static 'assets/image/bank/bank-saman.png' %}" alt="بانک سامان">
+                                                <img src="{{asset('image/bank/bank-saman.png')}}" alt="بانک سامان">
                                             </label>
                                         </li>
 
                                         <li class="nav-item">
                                             <input type="radio" name="payment_gateway" id="sepah" value="sepah">
                                             <label for="sepah">
-                                                <img src="{% static 'assets/image/bank/bank-sepah.png' %}" alt="بانک سپه">
+                                                <img src="{{asset('image/bank/bank-sepah.png')}}" alt="بانک سپه">
                                             </label>
                                         </li>
 
@@ -242,12 +242,12 @@
                             <div class="factor">
                                 <div class="d-flex factor-item mb-3 align-items-center justify-content-between">
                                     <h5 class="title-font mb-0 h6">قیمت کالا ها</h5>
-                                    <p class="mb-0 font-17">{{real_prices|intcomma}} تومان</p>
+                                    <p class="mb-0 font-17">{{number_format($real_price)}} تومان</p>
                                 </div>
 
                                 <div class="d-flex factor-item mb-3 align-items-center justify-content-between">
                                     <h5 class="title-font mb-0 h6">تخفیف کالا ها</h5>
-                                    <p class="mb-0 font-18">{{discount_total| intcomma}} تومان</p>
+                                    <p class="mb-0 font-18">{{number_format($discounted_price)}} تومان</p>
                                 </div>
 
                                 <div class="d-flex factor-item flex-column mb-3 align-items-start justify-content-between">
@@ -272,7 +272,7 @@
 
                                 <div class="d-flex factor-item mb-3 align-items-center justify-content-between">
                                     <h5 class="title-font mb-0 h6">مجموع</h5>
-                                    <p class="mb-0 font-18">{{total_price | intcomma}}  تومان</p>
+                                    <p class="mb-0 font-18">{{number_format($totalPrice)}}  تومان</p>
                                 </div>
 
                                 <div class="action mt-3 d-flex align-items-center justify-content-center">

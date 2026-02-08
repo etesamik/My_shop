@@ -261,13 +261,15 @@
 
                         </div>
                         <div class="se-cart-item">
-                            <form action="{{route('cart.add' , $product)}}" method="POST" class="w-100 d-flex flex-column justify-content-center align-items-center mt-3">
+                            <form action="{{route('cart.add')}}" method="POST" class="w-100 d-flex flex-column justify-content-center align-items-center mt-3">
                                 @csrf
                                 <div class="counter">
                                     <label>
-                                        <input type="number" name="count" class="counter text-center" value="1" min="1">
+                                        <input type="number" name="count" class="counter text-center"  min="1">
                                     </label>
                                 </div>
+                                <input type="hidden" name="id" value="{{ $product->id }}">
+
                                 <button type="submit" class="btn main-color-green w-100 text-center btn-add-to-cart text-white mt-3 d-flex justify-content-center">
                                     <i class="bi bi-basket me-3 lh-sm fs-4"></i> افزودن به سبد خرید
                                 </button>

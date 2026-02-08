@@ -738,8 +738,9 @@
                                     <span class="fw-bold">{{ $item['quantity'] }}</span>
                                 </div>
                                 <div class="cart-canvas-delete">
-                                    <form action="{{ route('cart.remove', $id) }}" method="POST" style="display:inline;">
+                                    <form action="{{ route('cart.remove') }}" method="POST" style="display:inline;">
                                         @csrf
+                                        <input type="hidden" name="id" value="{{ $id }}">
                                         <button type="submit" class="btn btn-danger" title="Remove from cart">
                                             <i class="bi bi-x"></i>
                                         </button>

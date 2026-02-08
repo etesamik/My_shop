@@ -176,7 +176,7 @@
                                 </div>
 
                                 <div class="action mt-3 d-flex align-items-center justify-content-center">
-                                    <a href="/products/checkout/"
+                                    <a href="{{route('cart.checkout')}}"
                                        class="btn main-color-one-outline py-2 rounded-pill rounded-3 d-block w-100">تسویه
                                         حساب</a>
                                 </div>

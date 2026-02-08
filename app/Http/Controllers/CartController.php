@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AddToCartRequest;
 use Illuminate\Http\Request;
 use App\Models\CartItem;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
+
 
 class CartController extends Controller
 {
@@ -20,8 +22,9 @@ class CartController extends Controller
     }
 
     //add to cart
-    public function addToCart($id){
-        $product = Product::findOrFail($id);
+    public function addToCart(AddToCartRequest $request){
+
+        $product = Product::findOrFail($request->id);
 
         if (Auth::check()) {
             $this->addToUserCart($product);
@@ -34,15 +37,16 @@ class CartController extends Controller
     }
 
     //delet
-    public function remove($id)
+    public function remove(AddToCartRequest $request)
     {
+        $product_id = $request->id;
         if (Auth::check()) {
             CartItem::where('user_id', Auth::id())
-                ->where('product_id', $id)
+                ->where('product_id', $product_id)
                 ->delete();
         } else {
             $cart = session()->get('cart', []);
-            unset($cart[$id]);
+            unset($cart[$product_id]);
             session()->put('cart', $cart);
         }
 
@@ -169,6 +173,11 @@ class CartController extends Controller
         }
 
         session()->put('cart', $cart);
+    }
+
+    public function emptyCart()
+    {
+        return view('frontend.cart.empty-cart');
     }
 
 }
